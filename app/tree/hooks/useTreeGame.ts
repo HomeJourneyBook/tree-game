@@ -7,7 +7,9 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
   const [cooldownProgress, setCooldownProgress] = useState(0);
   const [isSquashing, setIsSquashing] = useState(false);
   const [plusOnes, setPlusOnes] = useState<{ id: number }[]>([]);
-  const [quote, setQuote] = useState<string | null>(null);
+const [quote, setQuote] = useState<string | null>(null);
+const [quoteDirection, setQuoteDirection] = useState<'left' | 'right'>('left');
+const quoteDirRef = useRef<'left' | 'right'>('left');
   const [leaves, setLeaves] = useState<Leaf[]>([]);
   const [generatedClouds, setGeneratedClouds] = useState<Cloud[]>([]);
   const [generatedStars, setGeneratedStars] = useState<Star[]>([]);
@@ -47,8 +49,13 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
     }, 1200);
 
     const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-    setQuote(randomQuote);
-    setTimeout(() => setQuote(null), 3000);
+const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+const dir = quoteDirRef.current;
+setQuoteDirection(dir);
+quoteDirRef.current = dir === 'left' ? 'right' : 'left';
+setQuote(randomQuote);
+setTimeout(() => setQuote(null), 5000);
+
 
     const newLeaves = Array.from({ length: 12 }, (_, i) => ({
       id: Date.now() + i,
@@ -185,7 +192,7 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
 
   return {
     level, isCooldown, cooldownProgress,
-    isSquashing, plusOnes, quote, leaves,
+    isSquashing, plusOnes, quote, quoteDirection, leaves,
     generatedClouds, generatedStars, spaceObjects,
     handleWater, handleBoost, trunkSegments,
     squashTransform, squashTransition,
