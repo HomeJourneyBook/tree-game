@@ -57,7 +57,7 @@ export default function TreeScene({
       </div>
 
       {/* Облака ЗА деревом — статичные */}
-      {CLOUDS_BEHIND.map((c, i) => (
+{level < 80 && CLOUDS_BEHIND.map((c, i) => (
         <div key={i} style={{
           position: 'absolute',
           bottom: worldBottom + windowSize.width * c.bottomVw * objScale,
@@ -245,8 +245,9 @@ export default function TreeScene({
         />
       </div>
 
-      {/* Облака ПОВЕРХ дерева — статичные */}
-      {CLOUDS_FRONT.map((c, i) => (
+
+{/* Облака ПОВЕРХ дерева — статичные, только до уровня 80 */}
+{level < 80 && CLOUDS_FRONT.map((c, i) => (
         <div key={i} style={{
           position: 'absolute',
           bottom: worldBottom + windowSize.width * c.bottomVw * objScale,
