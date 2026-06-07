@@ -3,11 +3,15 @@ export const COOLDOWN_DURATION = 500;
 export const MAX_TRUNKS = 10;
 
 export const CLOUD_SPAWN_INTERVAL = 15;
+export const CLOUD_DENSE_START = 40;
+export const CLOUD_DENSE_END = 60;
+export const CLOUD_MAX_LEVEL = 80;
 
 export const CLOUD_TYPES = ['cloud1', 'cloud2', 'cloud3'];
 
-export const SPACE_THRESHOLD = 50;
+export const SPACE_THRESHOLD = 80;
 export const TRANSITION_DURATION = 20;
+export const SPACE_OBJECTS_START = 120;
 
 export const QUOTES = [
   "Thank you for watering! 🌱",
