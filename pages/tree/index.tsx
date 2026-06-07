@@ -33,7 +33,7 @@ export default function TreePage() {
 
   const {
     level, isCooldown, cooldownProgress,
-    isSquashing, plusOnes, quote, leaves,
+    isSquashing, plusOnes, quoteDirection, quote, leaves,
     generatedClouds, generatedStars, spaceObjects,
     handleWater, handleBoost, trunkSegments,
     squashTransform, squashTransition,
@@ -112,18 +112,18 @@ export default function TreePage() {
           0% { opacity: 1; transform: translateX(0px) translateY(0px) rotate(0deg); }
           100% { opacity: 0; transform: translateX(var(--x)) translateY(80px) rotate(180deg); }
         }
-                @keyframes quoteLeft {
-          0%   { opacity: 0; transform: translate(0px, 0px); }
-          10%  { opacity: 1; }
-          80%  { opacity: 1; }
-          100% { opacity: 0; transform: translate(-90px, -90px); }
-        }
-        @keyframes quoteRight {
-          0%   { opacity: 0; transform: translate(0px, 0px); }
-          10%  { opacity: 1; }
-          80%  { opacity: 1; }
-          100% { opacity: 0; transform: translate(90px, -90px); }
-        }
+        @keyframes quoteLeft {
+  0%   { opacity: 0; transform: translate(0px, 0px); }
+  8%   { opacity: 1; }
+  60%  { opacity: 1; transform: translate(-90px, -90px); }
+  100% { opacity: 0; transform: translate(-110px, -110px); }
+}
+@keyframes quoteRight {
+  0%   { opacity: 0; transform: translate(0px, 0px); }
+  8%   { opacity: 1; }
+  60%  { opacity: 1; transform: translate(90px, -90px); }
+  100% { opacity: 0; transform: translate(110px, -110px); }
+}
 
         @keyframes twinkle {
           0%, 100% { opacity: 1; transform: scale(1); }
@@ -160,6 +160,7 @@ export default function TreePage() {
           trunkSegments={trunkSegments}
           squashTransform={squashTransform}
           squashTransition={squashTransition}
+          quoteDirection={quoteDirection}
           quote={quote}
           leaves={leaves}
           generatedClouds={generatedClouds}
