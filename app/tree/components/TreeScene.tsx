@@ -20,6 +20,7 @@ type Props = {
   spaceObjects: SpaceObject[];
   isTablet: boolean;
   isMobile: boolean;
+  level: number;
 };
 
 export default function TreeScene({
@@ -28,7 +29,7 @@ export default function TreeScene({
   dragonBottomVw, trunkSegments,
   squashTransform, squashTransition,
   quote, leaves, generatedClouds, generatedStars,
-  spaceObjects, isMobile, isTablet,
+  spaceObjects, isMobile, isTablet, level,
 }: Props) {
   return (
     <>
@@ -188,26 +189,67 @@ export default function TreeScene({
         }} />
       ))}
 
-      {/* Цитата над деревом */}
+      {/* Level badge над кроной */}
+      <div style={{
+        position: 'fixed',
+        top: `${crownTopPx - 36}px`,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 5,
+        pointerEvents: 'none',
+        color: 'white',
+        fontSize: isMobile ? '11px' : '13px',
+        fontFamily: 'monospace',
+        background: 'rgba(0,0,0,0.45)',
+        border: '1px solid rgba(255,255,255,0.25)',
+        padding: '3px 10px',
+        borderRadius: '6px',
+        whiteSpace: 'nowrap',
+        letterSpacing: '0.05em',
+      }}>
+        Level {level}
+      </div>
+
+      {/* Цитаты — разлетаются влево и вправо под 45° */}
       {quote && (
-        <div style={{
-          position: 'fixed',
-          top: `${crownTopPx - 50}px`,
-          left: '50%',
-          zIndex: 5,
-          pointerEvents: 'none',
-          animation: 'quoteAnim 3s ease forwards',
-          whiteSpace: 'nowrap',
-          fontSize: isMobile ? '12px' : '14px',
-          color: 'white',
-          textShadow: '0 1px 4px rgba(0,0,0,0.8)',
-          background: 'rgba(0,0,0,0.35)',
-          padding: '6px 12px',
-          borderRadius: '20px',
-          transform: 'translateX(-50%)',
-        }}>
-          {quote}
-        </div>
+        <>
+          <div style={{
+            position: 'fixed',
+            top: `${crownTopPx - 20}px`,
+            left: '50%',
+            zIndex: 5,
+            pointerEvents: 'none',
+            animation: 'quoteLeft 3s ease forwards',
+            whiteSpace: 'nowrap',
+            fontSize: isMobile ? '11px' : '13px',
+            color: 'white',
+            textShadow: '0 1px 4px rgba(0,0,0,0.8)',
+            background: 'rgba(0,0,0,0.35)',
+            padding: '5px 10px',
+            borderRadius: '20px',
+            transformOrigin: 'left center',
+          }}>
+            {quote}
+          </div>
+          <div style={{
+            position: 'fixed',
+            top: `${crownTopPx - 20}px`,
+            left: '50%',
+            zIndex: 5,
+            pointerEvents: 'none',
+            animation: 'quoteRight 3s ease forwards',
+            whiteSpace: 'nowrap',
+            fontSize: isMobile ? '11px' : '13px',
+            color: 'white',
+            textShadow: '0 1px 4px rgba(0,0,0,0.8)',
+            background: 'rgba(0,0,0,0.35)',
+            padding: '5px 10px',
+            borderRadius: '20px',
+            transformOrigin: 'left center',
+          }}>
+            {quote}
+          </div>
+        </>
       )}
 
       {/* Основание */}
