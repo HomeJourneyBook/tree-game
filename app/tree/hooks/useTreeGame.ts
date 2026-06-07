@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { COOLDOWN_DURATION, MAX_TRUNKS, QUOTES, CLOUD_TYPES, CLOUD_SPAWN_INTERVAL, SPACE_THRESHOLD, Leaf, Cloud, Star, SpaceObject } from '../constants';
+import { COOLDOWN_DURATION, MAX_TRUNKS, QUOTES, CLOUD_TYPES, CLOUD_SPAWN_INTERVAL, CLOUD_DENSE_START, CLOUD_DENSE_END, CLOUD_MAX_LEVEL, SPACE_THRESHOLD, TRANSITION_DURATION, SPACE_OBJECTS_START, Leaf, Cloud, Star, SpaceObject } from '../constants';
 
 export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
   const [level, setLevel] = useState(0);
@@ -78,86 +78,90 @@ setTimeout(() => setQuote(null), 5000);
       const bg = bgOffsetRef.current;
 
       // Облака — только до порога космоса
-      if (newLevel < SPACE_THRESHOLD) {
-        setGeneratedClouds(clouds => {
-          const filtered = clouds.filter(c => c.worldY - bg > -200);
-          if (newLevel % CLOUD_SPAWN_INTERVAL === 0) {
-            let newX = Math.random() * 70 + 5;
-            let attempts = 0;
-            while (Math.abs(newX - lastCloudX) < 25 && attempts < 10) {
-              newX = Math.random() * 70 + 5;
-              attempts++;
-            }
-            setLastCloudX(newX);
-            const newCloud: Cloud = {
-              id: Date.now(),
-              type: CLOUD_TYPES[Math.floor(Math.random() * CLOUD_TYPES.length)],
-              x: newX,
-              worldY: bg + windowHeight * 2.5 + Math.random() * windowHeight,
-              widthVw: 10 + Math.random() * 8,
-              zIndex: Math.random() > 0.5 ? 3 : 1,
-              animDelay: `-${Math.floor(Math.random() * 15)}s`,
-              animDur: `${20 + Math.floor(Math.random() * 15)}s`,
-            };
-            return [...filtered, newCloud];
-          }
-          return filtered;
-        });
+   // Облака — только до CLOUD_MAX_LEVEL (80)
+// Между 40–60 генерим вдвое чаще (каждые 7 уровней вместо 15)
+if (newLevel < CLOUD_MAX_LEVEL) {
+  const isDense = newLevel >= CLOUD_DENSE_START && newLevel <= CLOUD_DENSE_END;
+  const interval = isDense ? Math.floor(CLOUD_SPAWN_INTERVAL / 2) : CLOUD_SPAWN_INTERVAL;
+  setGeneratedClouds(clouds => {
+    const filtered = clouds.filter(c => c.worldY - bg > -200);
+    if (newLevel % interval === 0) {
+      let newX = Math.random() * 70 + 5;
+      let attempts = 0;
+      while (Math.abs(newX - lastCloudX) < 25 && attempts < 10) {
+        newX = Math.random() * 70 + 5;
+        attempts++;
       }
+      setLastCloudX(newX);
+      const newCloud: Cloud = {
+        id: Date.now(),
+        type: CLOUD_TYPES[Math.floor(Math.random() * CLOUD_TYPES.length)],
+        x: newX,
+        worldY: bg + windowHeight * 2.5 + Math.random() * windowHeight,
+        widthVw: 10 + Math.random() * 8,
+        zIndex: Math.random() > 0.5 ? 3 : 1,
+        animDelay: `-${Math.floor(Math.random() * 15)}s`,
+        animDur: `${20 + Math.floor(Math.random() * 15)}s`,
+      };
+      return [...filtered, newCloud];
+    }
+    return filtered;
+  });
+}
 
-      // Звёзды — после порога, каждые 3 полива
-      if (newLevel >= SPACE_THRESHOLD && newLevel % 3 === 0) {
-        setGeneratedStars(stars => {
-          const filtered = stars.filter(s => s.worldY - bg > -200);
-          const count = 3 + Math.floor(Math.random() * 3);
-          const newStars: Star[] = Array.from({ length: count }, (_, i) => ({
-            id: Date.now() + i,
-            x: Math.random() * 95 + 2,
-            worldY: bg + windowHeight * 2 + Math.random() * windowHeight * 1.5,
-            size: Math.random() > 0.7 ? 2 : 1,
-            twinkleDelay: `-${(Math.random() * 3).toFixed(1)}s`,
-            twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
-          }));
-          return [...filtered, ...newStars];
-        });
-      }
+// Звёзды — после SPACE_THRESHOLD (80), каждые 3 полива
+if (newLevel >= SPACE_THRESHOLD && newLevel % 3 === 0) {
+  setGeneratedStars(stars => {
+    const filtered = stars.filter(s => s.worldY - bg > -200);
+    const count = 3 + Math.floor(Math.random() * 3);
+    const newStars: Star[] = Array.from({ length: count }, (_, i) => ({
+      id: Date.now() + i,
+      x: Math.random() * 95 + 2,
+      worldY: bg + windowHeight * 2 + Math.random() * windowHeight * 1.5,
+      size: Math.random() > 0.7 ? 2 : 1,
+      twinkleDelay: `-${(Math.random() * 3).toFixed(1)}s`,
+      twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
+    }));
+    return [...filtered, ...newStars];
+  });
+}
 
-      // Планета — каждые 5 поливов после порога
-      if (newLevel >= SPACE_THRESHOLD && newLevel % 5 === 0) {
-        setSpaceObjects(objs => {
-          const filtered = objs.filter(o => o.worldY - bg > -200);
-          let newX = Math.random() * 60 + 10;
-          let attempts = 0;
-          while (Math.abs(newX - lastPlanetX) < 30 && attempts < 10) {
-            newX = Math.random() * 60 + 10;
-            attempts++;
-          }
-          setLastPlanetX(newX);
-          const planet: SpaceObject = {
-            id: Date.now(),
-            type: 'planet',
-            x: newX,
-            worldY: bg + windowHeight * 2 + Math.random() * windowHeight,
-            zIndex: 1,
-          };
-          return [...filtered, planet];
-        });
-      }
+// Планета — после SPACE_OBJECTS_START (120), каждые 40 уровней, 30% шанс
+if (newLevel >= SPACE_OBJECTS_START && newLevel % 40 === 0 && Math.random() < 0.3) {
+  setSpaceObjects(objs => {
+    const filtered = objs.filter(o => o.worldY - bg > -200);
+    let newX = Math.random() * 60 + 10;
+    let attempts = 0;
+    while (Math.abs(newX - lastPlanetX) < 30 && attempts < 10) {
+      newX = Math.random() * 60 + 10;
+      attempts++;
+    }
+    setLastPlanetX(newX);
+    const planet: SpaceObject = {
+      id: Date.now(),
+      type: 'planet',
+      x: newX,
+      worldY: bg + windowHeight * 2 + Math.random() * windowHeight,
+      zIndex: 1,
+    };
+    return [...filtered, planet];
+  });
+}
 
-      // Корабль — каждые 20 поливов после порога
-      if (newLevel >= SPACE_THRESHOLD && newLevel % 20 === 0) {
-        setSpaceObjects(objs => {
-          const filtered = objs.filter(o => o.worldY - bg > -200);
-          const ship: SpaceObject = {
-            id: Date.now() + 1,
-            type: 'ship',
-            x: 0,
-            worldY: bg + windowHeight * 1.8 + Math.random() * windowHeight,
-            zIndex: 3,
-          };
-          return [...filtered, ship];
-        });
-      }
+// Корабль — после SPACE_OBJECTS_START (120), каждые 25 уровней, 20% шанс
+if (newLevel >= SPACE_OBJECTS_START && newLevel % 25 === 0 && Math.random() < 0.2) {
+  setSpaceObjects(objs => {
+    const filtered = objs.filter(o => o.worldY - bg > -200);
+    const ship: SpaceObject = {
+      id: Date.now() + 1,
+      type: 'ship',
+      x: 0,
+      worldY: bg + windowHeight * 1.8 + Math.random() * windowHeight,
+      zIndex: 3,
+    };
+    return [...filtered, ship];
+  });
+}
 
       return newLevel;
     });
