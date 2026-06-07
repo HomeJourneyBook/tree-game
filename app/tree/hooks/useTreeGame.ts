@@ -48,7 +48,7 @@ const quoteDirRef = useRef<'left' | 'right'>('left');
       setPlusOnes(prev => prev.filter(p => p.id !== id));
     }, 1200);
 
-    const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+
 const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
 const dir = quoteDirRef.current;
 setQuoteDirection(dir);
