@@ -112,12 +112,19 @@ export default function TreePage() {
           0% { opacity: 1; transform: translateX(0px) translateY(0px) rotate(0deg); }
           100% { opacity: 0; transform: translateX(var(--x)) translateY(80px) rotate(180deg); }
         }
-        @keyframes quoteAnim {
-          0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
-          15% { opacity: 1; transform: translateX(-50%) translateY(0px); }
-          75% { opacity: 1; transform: translateX(-50%) translateY(0px); }
-          100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+                @keyframes quoteLeft {
+          0%   { opacity: 0; transform: translate(0px, 0px); }
+          10%  { opacity: 1; }
+          80%  { opacity: 1; }
+          100% { opacity: 0; transform: translate(-90px, -90px); }
         }
+        @keyframes quoteRight {
+          0%   { opacity: 0; transform: translate(0px, 0px); }
+          10%  { opacity: 1; }
+          80%  { opacity: 1; }
+          100% { opacity: 0; transform: translate(90px, -90px); }
+        }
+
         @keyframes twinkle {
           0%, 100% { opacity: 1; transform: scale(1); }
           50% { opacity: 0.3; transform: scale(0.6); }
@@ -160,6 +167,7 @@ export default function TreePage() {
           spaceObjects={spaceObjects}
           isTablet={isTablet}
           isMobile={isMobile}
+          level={level}
         />
 
         <WaterButton
