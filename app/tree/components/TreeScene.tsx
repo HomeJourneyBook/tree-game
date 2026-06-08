@@ -147,7 +147,8 @@ export default function TreeScene({
     transition: bt,
     zIndex: obj.zIndex,
     pointerEvents: 'none',
-    animation: `${obj.fromLeft ? 'flyLeftToRight' : 'flyRightToLeft'} 8s linear forwards`,
+    animation: `${obj.fromLeft ? 'flyLeftToRight' : 'flyRightToLeft'} ${30 + Math.random() * 20}s linear infinite`,
+
   }}>
     {obj.type === 'ship' && (
       <img src="/tree/ship.gif" alt="" draggable="false"
