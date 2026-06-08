@@ -112,13 +112,13 @@ export default function TreePage() {
          100% { transform: translateX(-400px); }
        }
        @keyframes flyLeftToRight {
-         0%   { transform: translateX(0vw); }
-         100% { transform: translateX(130vw); }
-       }
-       @keyframes flyRightToLeft {
-         0%   { transform: translateX(0vw); }
-         100% { transform: translateX(-130vw); }
-       }
+  0%   { transform: translateX(-150vw); }
+  100% { transform: translateX(150vw); }
+}
+@keyframes flyRightToLeft {
+  0%   { transform: translateX(150vw); }
+  100% { transform: translateX(-150vw); }
+}
        @keyframes plusOneAnim {
          0% { opacity: 1; transform: translateY(0px) scale(1); }
          100% { opacity: 0; transform: translateY(-60px) scale(1.4); }
