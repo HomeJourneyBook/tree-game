@@ -71,10 +71,11 @@ export interface Star {
 
 export interface SpaceObject {
   id: number;
-  type: 'planet' | 'ship' | 'meteor' | 'rocket' | 'satellite' | 'asteroid';
+  type: 'planet' | 'ship' | 'meteor' | 'rocket' | 'satellite' | 'asteroid' | 'warning';
   x: number;
   worldY: number;
   zIndex: number;
   fromLeft?: boolean;
 }
+
 
