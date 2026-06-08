@@ -105,19 +105,21 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
         setGeneratedClouds(clouds => clouds.filter(c => c.worldY - bg > -windowHeight * 2));
       }
 
-// Звёзды — каждый уровень после 100, по 1-2 штуки, большой разброс по высоте
+
+      // Звёзды — после уровня 100, каждый полив 2-4 штуки
+// Каждая на своей случайной горизонтали выше экрана
 if (newLevel >= SPACE_THRESHOLD) {
+  const count = 2 + Math.floor(Math.random() * 3);
+  const newStars: Star[] = Array.from({ length: count }, (_, i) => ({
+    id: Date.now() + i,
+    x: Math.random() * 90 + 5,
+    worldY: bg + windowHeight * (1.1 + Math.random() * 0.8),
+    size: Math.random() > 0.7 ? 2 : 1,
+    twinkleDelay: `-${(Math.random() * 3).toFixed(1)}s`,
+    twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
+  }));
   setGeneratedStars(stars => {
-    const filtered = stars.filter(s => s.worldY - bg > -windowHeight * 1.5);
-    const count = 1 + Math.floor(Math.random() * 2);
-    const newStars: Star[] = Array.from({ length: count }, (_, i) => ({
-      id: Date.now() + i,
-      x: Math.random() * 95 + 2,
-      worldY: bg + Math.random() * windowHeight,
-      size: Math.random() > 0.8 ? 2 : 1,
-      twinkleDelay: `-${(Math.random() * 3).toFixed(1)}s`,
-      twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
-    }));
+    const filtered = stars.filter(s => s.worldY - bg > -windowHeight);
     return [...filtered, ...newStars];
   });
 }
