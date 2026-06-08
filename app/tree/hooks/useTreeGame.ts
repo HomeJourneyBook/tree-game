@@ -113,7 +113,7 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
           const newStars: Star[] = Array.from({ length: count }, (_, i) => ({
             id: Date.now() + i,
             x: Math.random() * 95 + 2,
-            worldY: bg + windowHeight * 1.1 + Math.random() * windowHeight * 0.5,
+            worldY: bg + windowHeight * 0.3 + Math.random() * windowHeight * 0.5,
             size: Math.random() > 0.7 ? 2 : 1,
             twinkleDelay: `-${(Math.random() * 3).toFixed(1)}s`,
             twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
@@ -123,7 +123,7 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
       }
 
       // Планеты — отдельный стейт, каждые 50 уровней, 40% шанс
-      if (newLevel >= SPACE_OBJECTS_START && newLevel % 50 === 0 && Math.random() < 0.4) {
+        if (newLevel >= SPACE_OBJECTS_START && newLevel % 80 === 0 && Math.random() < 0.4) {
         setPlanets(objs => {
           const filtered = objs.filter(o => o.worldY - bg > -windowHeight * 3);
           let newX = Math.random() * 60 + 10;
