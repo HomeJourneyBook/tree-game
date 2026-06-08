@@ -2,16 +2,16 @@ export const COOLDOWN_DURATION = 500;
 
 export const MAX_TRUNKS = 10;
 
-export const CLOUD_SPAWN_INTERVAL = 15;
-export const CLOUD_DENSE_START = 15;
-export const CLOUD_DENSE_END = 25;
-export const CLOUD_MAX_LEVEL = 30;
+export const CLOUD_SPAWN_INTERVAL = 10;
+export const CLOUD_DENSE_START = 10;
+export const CLOUD_DENSE_END = 35;
+export const CLOUD_MAX_LEVEL = 40;
 
 export const CLOUD_TYPES = ['cloud1', 'cloud2', 'cloud3'];
 
-export const SPACE_THRESHOLD = 30;
+export const SPACE_THRESHOLD = 50;
 export const TRANSITION_DURATION = 10;
-export const SPACE_OBJECTS_START = 50;
+export const SPACE_OBJECTS_START = 70;
 
 export const QUOTES = [
   "Thank you for watering! 🌱",
