@@ -179,6 +179,19 @@ export default function TreeScene({
               transform: 'rotate(20deg)' }}>
               🪨
             </div>
+          {obj.type === 'warning' && (
+  <div style={{
+    fontSize: isMobile ? '13px' : '16px',
+    color: 'rgba(255, 220, 100, 0.9)',
+    fontFamily: 'monospace',
+    fontWeight: 'bold',
+    whiteSpace: 'nowrap',
+    textShadow: '0 0 8px rgba(255, 200, 0, 0.6)',
+    letterSpacing: '0.05em',
+  }}>
+    ⚠️ Осторожно — вы выходите за пределы атмосферы
+  </div>
+)}
           )}
         </div>
       ))}
