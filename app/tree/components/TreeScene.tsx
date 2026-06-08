@@ -1,5 +1,5 @@
 import React from 'react';
-import { CLOUDS_BEHIND, CLOUDS_FRONT, Leaf, Cloud, Star, SpaceObject } from '../constants';
+import { CLOUDS_BEHIND, CLOUDS_FRONT, Leaf, Cloud, SpaceObject } from '../constants';
 
 type Props = {
   worldBottom: number;
@@ -17,7 +17,6 @@ type Props = {
   quoteDirection: 'left' | 'right';
   leaves: Leaf[];
   generatedClouds: Cloud[];
-  generatedStars: Star[];
   spaceObjects: SpaceObject[];
   planets: SpaceObject[];
   isTablet: boolean;
@@ -31,7 +30,7 @@ export default function TreeScene({
   treeWidthVw, crownTopPx, baseOffset,
   dragonBottomVw, trunkSegments, planets,
   squashTransform, squashTransition,
-  quote, quoteDirection, leaves, generatedClouds, generatedStars,
+  quote, quoteDirection, leaves, generatedClouds,
   spaceObjects, isMobile, isTablet, level, hasRendered,
 }: Props) {
   const bt = hasRendered ? 'bottom 0.8s ease' : 'none';
@@ -99,25 +98,6 @@ export default function TreeScene({
         </div>
       ))}
 
-      {/* Звёзды */}
-      {generatedStars.map(star => (
-        <div key={star.id} style={{
-          position: 'absolute',
-          left: `${star.x}%`,
-          bottom: worldBottom + star.worldY,
-          transition: bt,
-          width: star.size === 2 ? '3px' : '2px',
-          height: star.size === 2 ? '3px' : '2px',
-          backgroundColor: 'white',
-          borderRadius: '50%',
-          zIndex: 0,
-          pointerEvents: 'none',
-          animation: star.size === 2
-            ? `twinkle ${star.twinkleDur} ease-in-out infinite ${star.twinkleDelay}`
-            : 'none',
-        }} />
-      ))}
-
       {/* Планеты */}
       {planets.map(obj => (
         <div key={obj.id} style={{
@@ -138,65 +118,50 @@ export default function TreeScene({
         </div>
       ))}
 
-    {/* Космические объекты — летят горизонтально */}
-{spaceObjects.map(obj => (
-  <div key={obj.id} style={{
-    position: 'absolute',
-    bottom: worldBottom + obj.worldY,
-    left: obj.fromLeft ? '-10%' : '110%',
-    transition: bt,
-    zIndex: obj.zIndex,
-    pointerEvents: 'none',
-animation: `${obj.fromLeft ? 'flyLeftToRight' : 'flyRightToLeft'} 30s linear infinite`,
-
-  }}>
-    {obj.type === 'ship' && (
-      <img src="/tree/ship.gif" alt="" draggable="false"
-        style={{
-          imageRendering: 'pixelated',
-          transform: obj.fromLeft ? 'scaleX(1)' : 'scaleX(-1)',
-        }}
-      />
-    )}
-    {obj.type === 'meteor' && (
-      <div style={{ fontSize: isMobile ? '40px' : '52px', lineHeight: 1,
-        transform: obj.fromLeft ? 'rotate(-45deg)' : 'rotate(45deg)' }}>
-        ☄️
-      </div>
-    )}
-    {obj.type === 'rocket' && (
-      <div style={{ fontSize: isMobile ? '36px' : '48px', lineHeight: 1,
-        transform: obj.fromLeft ? 'rotate(90deg)' : 'rotate(-90deg)' }}>
-        🚀
-      </div>
-    )}
-    {obj.type === 'satellite' && (
-      <div style={{ fontSize: isMobile ? '34px' : '44px', lineHeight: 1 }}>
-        🛸
-      </div>
-    )}
-    {obj.type === 'asteroid' && (
-      <div style={{ fontSize: isMobile ? '38px' : '50px', lineHeight: 1,
-        transform: 'rotate(20deg)' }}>
-        🪨
-      </div>
-    )}
-    {obj.type === 'warning' && (
-      <div style={{
-        fontSize: isMobile ? '13px' : '16px',
-        color: 'rgba(255, 220, 100, 0.9)',
-        fontFamily: 'monospace',
-        fontWeight: 'bold',
-        whiteSpace: 'nowrap',
-        textShadow: '0 0 8px rgba(255, 200, 0, 0.6)',
-        letterSpacing: '0.05em',
-      }}>
-        ⚠️ Осторожно — вы выходите за пределы атмосферы
-      </div>
-    )}
-  </div>
-))}
-
+      {/* Космические объекты — летят горизонтально */}
+      {spaceObjects.map(obj => (
+        <div key={obj.id} style={{
+          position: 'absolute',
+          bottom: worldBottom + obj.worldY,
+          left: obj.fromLeft ? '-10%' : '110%',
+          transition: bt,
+          zIndex: obj.zIndex,
+          pointerEvents: 'none',
+          animation: `${obj.fromLeft ? 'flyLeftToRight' : 'flyRightToLeft'} 30s linear infinite`,
+        }}>
+          {obj.type === 'ship' && (
+            <img src="/tree/ship.gif" alt="" draggable="false"
+              style={{
+                imageRendering: 'pixelated',
+                transform: obj.fromLeft ? 'scaleX(1)' : 'scaleX(-1)',
+              }}
+            />
+          )}
+          {obj.type === 'meteor' && (
+            <div style={{ fontSize: isMobile ? '40px' : '52px', lineHeight: 1,
+              transform: obj.fromLeft ? 'rotate(-45deg)' : 'rotate(45deg)' }}>
+              ☄️
+            </div>
+          )}
+          {obj.type === 'rocket' && (
+            <div style={{ fontSize: isMobile ? '36px' : '48px', lineHeight: 1,
+              transform: obj.fromLeft ? 'rotate(90deg)' : 'rotate(-90deg)' }}>
+              🚀
+            </div>
+          )}
+          {obj.type === 'satellite' && (
+            <div style={{ fontSize: isMobile ? '34px' : '44px', lineHeight: 1 }}>
+              🛸
+            </div>
+          )}
+          {obj.type === 'asteroid' && (
+            <div style={{ fontSize: isMobile ? '38px' : '50px', lineHeight: 1,
+              transform: 'rotate(20deg)' }}>
+              🪨
+            </div>
+          )}
+        </div>
+      ))}
 
       {/* Крона + стволы */}
       <div style={{
@@ -207,25 +172,25 @@ animation: `${obj.fromLeft ? 'flyLeftToRight' : 'flyRightToLeft'} 30s linear inf
         zIndex: 2, pointerEvents: 'none',
       }}>
         <div style={{
-  display: 'flex', flexDirection: 'column', alignItems: 'center',
-  lineHeight: 0, fontSize: 0, transformOrigin: 'bottom center',
-  transform: squashTransform, transition: squashTransition,
-  gap: 0,
-}}>
-  <img src="/tree/2.png" alt="crown" draggable="false"
-    style={{ width: `${treeWidthVw}vw`, imageRendering: 'pixelated', display: 'block' }}
-  />
-  {trunkSegments.map((src, i) => (
-    <img key={i} src={src} alt="trunk" draggable="false"
-      style={{
-        width: `${treeWidthVw}vw`,
-        imageRendering: 'pixelated',
-        display: 'block',
-        verticalAlign: 'bottom',
-      }}
-    />
-  ))}
-</div>
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          lineHeight: 0, fontSize: 0, transformOrigin: 'bottom center',
+          transform: squashTransform, transition: squashTransition,
+          gap: 0,
+        }}>
+          <img src="/tree/2.png" alt="crown" draggable="false"
+            style={{ width: `${treeWidthVw}vw`, imageRendering: 'pixelated', display: 'block' }}
+          />
+          {trunkSegments.map((src, i) => (
+            <img key={i} src={src} alt="trunk" draggable="false"
+              style={{
+                width: `${treeWidthVw}vw`,
+                imageRendering: 'pixelated',
+                display: 'block',
+                verticalAlign: 'bottom',
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Листья */}
