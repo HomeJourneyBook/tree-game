@@ -34,7 +34,7 @@ export default function TreePage() {
   const {
     level, isCooldown, cooldownProgress,
     isSquashing, plusOnes, quoteDirection, quote, leaves,
-    generatedClouds, generatedStars, spaceObjects,
+generatedClouds, generatedStars, planets, spaceObjects,
     handleWater, handleBoost, trunkSegments,
     squashTransform, squashTransition,
   } = useTreeGame(windowSize.height, trunkHeightPx);
@@ -125,6 +125,15 @@ export default function TreePage() {
   100% { opacity: 0; transform: translate(110px, -110px); }
 }
 
+@keyframes flyLeftToRight {
+  0%   { transform: translateX(0vw); }
+  100% { transform: translateX(130vw); }
+}
+@keyframes flyRightToLeft {
+  0%   { transform: translateX(0vw); }
+  100% { transform: translateX(-130vw); }
+}
+
         @keyframes twinkle {
           0%, 100% { opacity: 1; transform: scale(1); }
           50% { opacity: 0.3; transform: scale(0.6); }
@@ -169,6 +178,7 @@ export default function TreePage() {
           isTablet={isTablet}
           isMobile={isMobile}
           level={level}
+          planets={planets}
         />
 
         <WaterButton
