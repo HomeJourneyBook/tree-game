@@ -15,6 +15,10 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
   const [planets, setPlanets] = useState<SpaceObject[]>([]);
   const [spaceObjects, setSpaceObjects] = useState<SpaceObject[]>([]);
   const [atmosphereWarning, setAtmosphereWarning] = useState(false);
+  const [showRainbow, setShowRainbow] = useState(false);
+  const [comet, setComet] = useState<{ id: number; fromLeft: boolean } | null>(null);
+  const [bird, setBird] = useState<{ id: number; side: 'left' | 'right' } | null>(null);
+  const [collectible, setCollectible] = useState<{ id: number; x: number; y: number; emoji: string } | null>(null);
   const [lastCloudX, setLastCloudX] = useState(50);
   const [lastPlanetX, setLastPlanetX] = useState(50);
 
@@ -76,7 +80,7 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
       bgOffsetRef.current = newLevel * trunkHeightPx;
       const bg = bgOffsetRef.current;
 
-      // Облака — до CLOUD_MAX_LEVEL
+      // Облака
       if (newLevel < CLOUD_MAX_LEVEL) {
         if (newLevel % CLOUD_SPAWN_INTERVAL === 0) {
           setGeneratedClouds(clouds => {
@@ -88,7 +92,7 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
               attempts++;
             }
             setLastCloudX(newX);
-            const newCloud: Cloud = {
+            return [...filtered, {
               id: Date.now(),
               type: CLOUD_TYPES[Math.floor(Math.random() * CLOUD_TYPES.length)],
               x: newX,
@@ -97,12 +101,43 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
               zIndex: Math.random() > 0.5 ? 3 : 1,
               animDelay: `-${Math.floor(Math.random() * 15)}s`,
               animDur: `${20 + Math.floor(Math.random() * 15)}s`,
-            };
-            return [...filtered, newCloud];
+            }];
           });
         }
       } else {
         setGeneratedClouds(clouds => clouds.filter(c => c.worldY - bg > -windowHeight * 2));
+      }
+
+      // Радуга — до космоса, редко
+      if (newLevel < SPACE_THRESHOLD && newLevel % 20 === 0 && Math.random() < 0.4) {
+        setShowRainbow(true);
+        setTimeout(() => setShowRainbow(false), 8000);
+      }
+
+      // Птица — до космоса, случайно
+      if (newLevel < SPACE_THRESHOLD && newLevel % 15 === 0 && Math.random() < 0.5 && !bird) {
+        const side = Math.random() > 0.5 ? 'left' : 'right';
+        setBird({ id: Date.now(), side });
+        setTimeout(() => setBird(null), 6000);
+      }
+
+      // Комета — в переходной зоне и в космосе
+      if (newLevel >= 70 && newLevel % 25 === 0 && Math.random() < 0.5 && !comet) {
+        const fromLeft = Math.random() > 0.5;
+        setComet({ id: Date.now(), fromLeft });
+        setTimeout(() => setComet(null), 4000);
+      }
+
+      // Интерактивный объект — в атмосфере и космосе, случайно
+      if (newLevel % 18 === 0 && Math.random() < 0.5 && !collectible) {
+        const emojis = ['🍀', '⭐', '💎', '🌸', '🔮', '🎁'];
+        setCollectible({
+          id: Date.now(),
+          x: 15 + Math.random() * 70,
+          y: 20 + Math.random() * 50,
+          emoji: emojis[Math.floor(Math.random() * emojis.length)],
+        });
+        setTimeout(() => setCollectible(null), 8000);
       }
 
       // Предупреждение на уровне 90
@@ -111,7 +146,7 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
         setTimeout(() => setAtmosphereWarning(false), 12000);
       }
 
-      // Планеты — каждые 80 уровней, 40% шанс
+      // Планеты
       if (newLevel >= SPACE_OBJECTS_START && newLevel % 80 === 0 && Math.random() < 0.4) {
         setPlanets(objs => {
           const filtered = objs.filter(o => o.worldY - bg > -windowHeight * 3);
@@ -132,7 +167,7 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
         });
       }
 
-      // Космические объекты — каждые 5 уровней, 50% шанс
+      // Космические объекты
       const SPACE_OBJ_TYPES: Array<'ship' | 'meteor' | 'rocket' | 'satellite' | 'asteroid'> = ['ship', 'meteor', 'rocket', 'satellite', 'asteroid'];
       if (newLevel >= SPACE_OBJECTS_START && newLevel % 5 === 0 && Math.random() < 0.5) {
         setSpaceObjects(objs => {
@@ -184,7 +219,9 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
   return {
     level, isCooldown, cooldownProgress,
     isSquashing, plusOnes, quote, quoteDirection, leaves,
-    generatedClouds, planets, spaceObjects, atmosphereWarning,
+    generatedClouds, planets, spaceObjects,
+    atmosphereWarning, showRainbow, comet, bird, collectible,
+    setCollectible,
     handleWater, handleBoost, trunkSegments,
     squashTransform, squashTransition,
   };
