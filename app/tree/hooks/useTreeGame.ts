@@ -122,6 +122,18 @@ if (newLevel >= SPACE_THRESHOLD) {
   });
 }
 
+      // Предупреждение на уровне 90
+if (newLevel === 90) {
+  setSpaceObjects(objs => [...objs, {
+    id: Date.now() + 99,
+    type: 'warning' as const,
+    x: 0,
+    worldY: bg + windowHeight * 0.4,
+    zIndex: 4,
+    fromLeft: true,
+  }]);
+}
+
 
       // Планеты — отдельный стейт, каждые 50 уровней, 40% шанс
         if (newLevel >= SPACE_OBJECTS_START && newLevel % 80 === 0 && Math.random() < 0.4) {
