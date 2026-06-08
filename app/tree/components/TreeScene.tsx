@@ -192,24 +192,25 @@ export default function TreeScene({
         zIndex: 2, pointerEvents: 'none',
       }}>
         <div style={{
-          display: 'flex', flexDirection: 'column', alignItems: 'center',
-          lineHeight: 0, fontSize: 0, transformOrigin: 'bottom center',
-          transform: squashTransform, transition: squashTransition,
-        }}>
-          <img src="/tree/2.png" alt="crown" draggable="false"
-            style={{ width: `${treeWidthVw}vw`, imageRendering: 'pixelated', display: 'block' }}
-          />
-          {trunkSegments.map((src, i) => (
-            <img key={i} src={src} alt="trunk" draggable="false"
-              style={{
-                width: `${treeWidthVw}vw`,
-                imageRendering: 'pixelated',
-                display: 'block',
-                marginBottom: '-1px',
-              }}
-            />
-          ))}
-        </div>
+  display: 'flex', flexDirection: 'column', alignItems: 'center',
+  lineHeight: 0, fontSize: 0, transformOrigin: 'bottom center',
+  transform: squashTransform, transition: squashTransition,
+  gap: 0,
+}}>
+  <img src="/tree/2.png" alt="crown" draggable="false"
+    style={{ width: `${treeWidthVw}vw`, imageRendering: 'pixelated', display: 'block' }}
+  />
+  {trunkSegments.map((src, i) => (
+    <img key={i} src={src} alt="trunk" draggable="false"
+      style={{
+        width: `${treeWidthVw}vw`,
+        imageRendering: 'pixelated',
+        display: 'block',
+        verticalAlign: 'bottom',
+      }}
+    />
+  ))}
+</div>
       </div>
 
       {/* Листья */}
