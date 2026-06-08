@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { COOLDOWN_DURATION, MAX_TRUNKS, QUOTES, CLOUD_TYPES, CLOUD_SPAWN_INTERVAL, CLOUD_MAX_LEVEL, SPACE_THRESHOLD, SPACE_OBJECTS_START, Leaf, Cloud, Star, SpaceObject } from '../constants';
+import { COOLDOWN_DURATION, MAX_TRUNKS, QUOTES, CLOUD_TYPES, CLOUD_SPAWN_INTERVAL, CLOUD_MAX_LEVEL, SPACE_THRESHOLD, SPACE_OBJECTS_START, Leaf, Cloud, SpaceObject } from '../constants';
 
 export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
   const [level, setLevel] = useState(0);
@@ -12,9 +12,9 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
   const quoteDirRef = useRef<'left' | 'right'>('left');
   const [leaves, setLeaves] = useState<Leaf[]>([]);
   const [generatedClouds, setGeneratedClouds] = useState<Cloud[]>([]);
-  const [generatedStars, setGeneratedStars] = useState<Star[]>([]);
   const [planets, setPlanets] = useState<SpaceObject[]>([]);
   const [spaceObjects, setSpaceObjects] = useState<SpaceObject[]>([]);
+  const [atmosphereWarning, setAtmosphereWarning] = useState(false);
   const [lastCloudX, setLastCloudX] = useState(50);
   const [lastPlanetX, setLastPlanetX] = useState(50);
 
@@ -76,7 +76,7 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
       bgOffsetRef.current = newLevel * trunkHeightPx;
       const bg = bgOffsetRef.current;
 
-      // Облака — каждые 3 уровня до уровня 15
+      // Облака — до CLOUD_MAX_LEVEL
       if (newLevel < CLOUD_MAX_LEVEL) {
         if (newLevel % CLOUD_SPAWN_INTERVAL === 0) {
           setGeneratedClouds(clouds => {
@@ -105,42 +105,14 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
         setGeneratedClouds(clouds => clouds.filter(c => c.worldY - bg > -windowHeight * 2));
       }
 
-
-      // Звёзды — после уровня 100, каждый полив 2-4 штуки
-// Звёзды — после SPACE_THRESHOLD, каждый полив 1-3 штуки
-if (newLevel >= SPACE_THRESHOLD) {
-  const count = 1 + Math.floor(Math.random() * 3);
-  const newStars: Star[] = Array.from({ length: count }, (_, i) => ({
-    id: Date.now() + i,
-    x: Math.random() * 90 + 5,
-    worldY: bg + windowHeight * (1.1 + Math.random() * 0.8),
-    size: Math.random() > 0.7 ? 2 : 1,
-    twinkleDelay: `-${(Math.random() * 3).toFixed(1)}s`,
-    twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
-  }));
-  setGeneratedStars(stars => {
-    const filtered = stars.filter(s => s.worldY > bg);
-    return [...filtered, ...newStars];
-  });
-}
-
-
-
       // Предупреждение на уровне 90
-if (newLevel === 90) {
-  setSpaceObjects(objs => [...objs, {
-    id: Date.now() + 99,
-    type: 'warning' as const,
-    x: 0,
-worldY: bg - windowHeight * 0.2,
-    zIndex: 4,
-    fromLeft: true,
-  }]);
-}
+      if (newLevel === SPACE_THRESHOLD) {
+        setAtmosphereWarning(true);
+        setTimeout(() => setAtmosphereWarning(false), 12000);
+      }
 
-
-      // Планеты — отдельный стейт, каждые 50 уровней, 40% шанс
-        if (newLevel >= SPACE_OBJECTS_START && newLevel % 80 === 0 && Math.random() < 0.4) {
+      // Планеты — каждые 80 уровней, 40% шанс
+      if (newLevel >= SPACE_OBJECTS_START && newLevel % 80 === 0 && Math.random() < 0.4) {
         setPlanets(objs => {
           const filtered = objs.filter(o => o.worldY - bg > -windowHeight * 3);
           let newX = Math.random() * 60 + 10;
@@ -160,7 +132,7 @@ worldY: bg - windowHeight * 0.2,
         });
       }
 
-      // Космические объекты — отдельный стейт, каждые 5 уровней, 50% шанс
+      // Космические объекты — каждые 5 уровней, 50% шанс
       const SPACE_OBJ_TYPES: Array<'ship' | 'meteor' | 'rocket' | 'satellite' | 'asteroid'> = ['ship', 'meteor', 'rocket', 'satellite', 'asteroid'];
       if (newLevel >= SPACE_OBJECTS_START && newLevel % 5 === 0 && Math.random() < 0.5) {
         setSpaceObjects(objs => {
@@ -212,7 +184,7 @@ worldY: bg - windowHeight * 0.2,
   return {
     level, isCooldown, cooldownProgress,
     isSquashing, plusOnes, quote, quoteDirection, leaves,
-    generatedClouds, generatedStars, planets, spaceObjects,
+    generatedClouds, planets, spaceObjects, atmosphereWarning,
     handleWater, handleBoost, trunkSegments,
     squashTransform, squashTransition,
   };
