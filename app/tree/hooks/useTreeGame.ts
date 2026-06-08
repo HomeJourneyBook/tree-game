@@ -105,22 +105,23 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
         setGeneratedClouds(clouds => clouds.filter(c => c.worldY - bg > -windowHeight * 2));
       }
 
-      // Звёзды — с уровня 90, каждые 2 полива
-      if (newLevel >= SPACE_THRESHOLD && newLevel % 2 === 0) {
-        setGeneratedStars(stars => {
-          const filtered = stars.filter(s => s.worldY - bg > -windowHeight * 1.5);
-          const count = 3 + Math.floor(Math.random() * 3);
-          const newStars: Star[] = Array.from({ length: count }, (_, i) => ({
-            id: Date.now() + i,
-            x: Math.random() * 95 + 2,
-            worldY: bg + windowHeight * 0.3 + Math.random() * windowHeight * 0.4,
-            size: Math.random() > 0.7 ? 2 : 1,
-            twinkleDelay: `-${(Math.random() * 3).toFixed(1)}s`,
-            twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
-          }));
-          return [...filtered, ...newStars];
-        });
-      }
+// Звёзды — каждый уровень после 100, по 1-2 штуки, большой разброс по высоте
+if (newLevel >= SPACE_THRESHOLD) {
+  setGeneratedStars(stars => {
+    const filtered = stars.filter(s => s.worldY - bg > -windowHeight * 1.5);
+    const count = 1 + Math.floor(Math.random() * 2);
+    const newStars: Star[] = Array.from({ length: count }, (_, i) => ({
+      id: Date.now() + i,
+      x: Math.random() * 95 + 2,
+      worldY: bg + Math.random() * windowHeight,
+      size: Math.random() > 0.8 ? 2 : 1,
+      twinkleDelay: `-${(Math.random() * 3).toFixed(1)}s`,
+      twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
+    }));
+    return [...filtered, ...newStars];
+  });
+}
+
 
       // Планеты — отдельный стейт, каждые 50 уровней, 40% шанс
         if (newLevel >= SPACE_OBJECTS_START && newLevel % 80 === 0 && Math.random() < 0.4) {
