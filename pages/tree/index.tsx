@@ -23,6 +23,15 @@ function interpolateColor(color1: string, color2: string, factor: number): strin
 
 export default function TreePage() {
   const [imagesReady, setImagesReady] = useState(false);
+  
+  const [hasRendered, setHasRendered] = useState(false);
+
+useEffect(() => {
+  if (isReady) {
+    // Даём один кадр без transition, потом включаем
+    requestAnimationFrame(() => setHasRendered(true));
+  }
+}, [isReady]);
 
   const {
     isMobile, isTablet, isLandscape,
