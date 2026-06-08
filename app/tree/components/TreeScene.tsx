@@ -14,6 +14,7 @@ type Props = {
   squashTransform: string;
   squashTransition: string;
   quote: string | null;
+  quoteDirection: 'left' | 'right';
   leaves: Leaf[];
   generatedClouds: Cloud[];
   generatedStars: Star[];
@@ -21,7 +22,6 @@ type Props = {
   isTablet: boolean;
   isMobile: boolean;
   level: number;
-  quoteDirection: 'left' | 'right';
 };
 
 export default function TreeScene({
@@ -57,7 +57,7 @@ export default function TreeScene({
       </div>
 
       {/* Облака ЗА деревом — статичные */}
-{CLOUDS_BEHIND.map((c, i) => (
+      {CLOUDS_BEHIND.map((c, i) => (
         <div key={i} style={{
           position: 'absolute',
           bottom: worldBottom + windowSize.width * c.bottomVw * objScale,
@@ -117,11 +117,12 @@ export default function TreeScene({
       {/* Космические объекты */}
       {spaceObjects.map(obj => (
         <div key={obj.id} style={{
-     position: 'absolute',
-bottom: worldBottom + obj.worldY,
-top: undefined,
-left: `${obj.x}%`,
-transition: 'bottom 0.8s ease',
+          position: 'absolute',
+          bottom: worldBottom + obj.worldY,
+          left: `${obj.x}%`,
+          transition: 'bottom 0.8s ease',
+          zIndex: obj.zIndex,
+          pointerEvents: 'none',
         }}>
           {obj.type === 'planet' && (
             <img src="/tree/planet.png" alt="" draggable="false"
@@ -139,6 +140,26 @@ transition: 'bottom 0.8s ease',
                 animation: 'shipFly 8s linear forwards',
               }}
             />
+          )}
+          {obj.type === 'meteor' && (
+            <div style={{ fontSize: isMobile ? '40px' : '52px', lineHeight: 1, transform: 'rotate(-45deg)' }}>
+              ☄️
+            </div>
+          )}
+          {obj.type === 'rocket' && (
+            <div style={{ fontSize: isMobile ? '36px' : '48px', lineHeight: 1, transform: 'rotate(45deg)' }}>
+              🚀
+            </div>
+          )}
+          {obj.type === 'satellite' && (
+            <div style={{ fontSize: isMobile ? '34px' : '44px', lineHeight: 1, animation: 'bob 4s ease-in-out infinite' }}>
+              🛸
+            </div>
+          )}
+          {obj.type === 'asteroid' && (
+            <div style={{ fontSize: isMobile ? '38px' : '50px', lineHeight: 1, transform: 'rotate(20deg)' }}>
+              🪨
+            </div>
           )}
         </div>
       ))}
@@ -209,27 +230,25 @@ transition: 'bottom 0.8s ease',
         Level {level}
       </div>
 
-      {/* Цитаты — разлетаются влево и вправо под 45° */}
-   {/* Цитата — чередует стороны, без фона, чёрный текст */}
-{quote && (
-  <div style={{
-    position: 'fixed',
-    top: `${crownTopPx - 20}px`,
-    left: '50%',
-    zIndex: 5,
-    pointerEvents: 'none',
-    animation: `${quoteDirection === 'left' ? 'quoteLeft' : 'quoteRight'} 5s ease forwards`,
-    whiteSpace: 'nowrap',
-    fontSize: isMobile ? '11px' : '13px',
-    color: 'black',
-    fontFamily: 'monospace',
-    fontWeight: 'bold',
-    textShadow: '0 1px 2px rgba(255,255,255,0.4)',
-  }}>
-    {quote}
-  </div>
-)}
-
+      {/* Цитата — чередует стороны */}
+      {quote && (
+        <div style={{
+          position: 'fixed',
+          top: `${crownTopPx - 20}px`,
+          left: '50%',
+          zIndex: 5,
+          pointerEvents: 'none',
+          animation: `${quoteDirection === 'left' ? 'quoteLeft' : 'quoteRight'} 5s ease forwards`,
+          whiteSpace: 'nowrap',
+          fontSize: isMobile ? '11px' : '13px',
+          color: 'black',
+          fontFamily: 'monospace',
+          fontWeight: 'bold',
+          textShadow: '0 1px 2px rgba(255,255,255,0.4)',
+        }}>
+          {quote}
+        </div>
+      )}
 
       {/* Основание */}
       <div style={{
@@ -243,9 +262,8 @@ transition: 'bottom 0.8s ease',
         />
       </div>
 
-
-{/* Облака ПОВЕРХ дерева — статичные, только до уровня 80 */}
-{CLOUDS_FRONT.map((c, i) => (
+      {/* Облака ПОВЕРХ дерева — статичные */}
+      {CLOUDS_FRONT.map((c, i) => (
         <div key={i} style={{
           position: 'absolute',
           bottom: worldBottom + windowSize.width * c.bottomVw * objScale,
