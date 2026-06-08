@@ -86,8 +86,8 @@ export default function TreePage() {
 
   // Параллакс звёзд — сдвиг вниз зацикленный по высоте экрана
   const starOffset = windowSize.height > 0
-    ? (level * trunkHeightPx) % windowSize.height
-    : 0;
+  ? ((level - SPACE_THRESHOLD) * trunkHeightPx) % windowSize.height
+  : 0;
 
   return (
     <>
