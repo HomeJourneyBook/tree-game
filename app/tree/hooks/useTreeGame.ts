@@ -109,8 +109,9 @@ if (newLevel < CLOUD_MAX_LEVEL) {
   });
 }
 
-// Звёзды — после SPACE_THRESHOLD (80), каждые 3 полива
-if (newLevel >= SPACE_THRESHOLD && newLevel % 3 === 0) {
+
+  // Звёзды — начинаем с уровня 20 (во время перехода), каждые 3 полива
+if (newLevel >= 20 && newLevel % 3 === 0) {
   setGeneratedStars(stars => {
     const filtered = stars.filter(s => s.worldY - bg > -200);
     const count = 3 + Math.floor(Math.random() * 3);
@@ -126,8 +127,8 @@ if (newLevel >= SPACE_THRESHOLD && newLevel % 3 === 0) {
   });
 }
 
-// Планета — после SPACE_OBJECTS_START (120), каждые 40 уровней, 30% шанс
-if (newLevel >= SPACE_OBJECTS_START && newLevel % 40 === 0 && Math.random() < 0.3) {
+// Планета — после SPACE_OBJECTS_START, каждые 60 уровней, 20% шанс
+if (newLevel >= SPACE_OBJECTS_START && newLevel % 60 === 0 && Math.random() < 0.2) {
   setSpaceObjects(objs => {
     const filtered = objs.filter(o => o.worldY - bg > -200);
     let newX = Math.random() * 60 + 10;
