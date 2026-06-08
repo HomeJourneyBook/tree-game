@@ -107,8 +107,8 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
 
 
       // Звёзды — после уровня 100, каждый полив 2-4 штуки
-// Каждая на своей случайной горизонтали выше экрана
-      if (newLevel >= SPACE_THRESHOLD) {
+// Звёзды — после SPACE_THRESHOLD, каждый полив 1-3 штуки
+if (newLevel >= SPACE_THRESHOLD) {
   const count = 1 + Math.floor(Math.random() * 3);
   const newStars: Star[] = Array.from({ length: count }, (_, i) => ({
     id: Date.now() + i,
@@ -118,10 +118,12 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
     twinkleDelay: `-${(Math.random() * 3).toFixed(1)}s`,
     twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
   }));
-    setGeneratedStars(stars => {
-  const filtered = stars.filter(s => s.worldY > bg);
-  return [...filtered, ...newStars];
-});
+  setGeneratedStars(stars => {
+    const filtered = stars.filter(s => s.worldY > bg);
+    return [...filtered, ...newStars];
+  });
+}
+
 
 
       // Предупреждение на уровне 90
