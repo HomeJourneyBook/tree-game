@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { COOLDOWN_DURATION, MAX_TRUNKS, QUOTES, CLOUD_TYPES, CLOUD_SPAWN_INTERVAL, CLOUD_DENSE_START, CLOUD_DENSE_END, CLOUD_MAX_LEVEL, SPACE_THRESHOLD, SPACE_OBJECTS_START, Leaf, Cloud, Star, SpaceObject } from '../constants';
+import { COOLDOWN_DURATION, MAX_TRUNKS, QUOTES, CLOUD_TYPES, CLOUD_SPAWN_INTERVAL, CLOUD_MAX_LEVEL, SPACE_THRESHOLD, SPACE_OBJECTS_START, Leaf, Cloud, Star, SpaceObject } from '../constants';
 
 export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
   const [level, setLevel] = useState(0);
@@ -13,6 +13,7 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
   const [leaves, setLeaves] = useState<Leaf[]>([]);
   const [generatedClouds, setGeneratedClouds] = useState<Cloud[]>([]);
   const [generatedStars, setGeneratedStars] = useState<Star[]>([]);
+  const [planets, setPlanets] = useState<SpaceObject[]>([]);
   const [spaceObjects, setSpaceObjects] = useState<SpaceObject[]>([]);
   const [lastCloudX, setLastCloudX] = useState(50);
   const [lastPlanetX, setLastPlanetX] = useState(50);
@@ -75,13 +76,11 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
       bgOffsetRef.current = newLevel * trunkHeightPx;
       const bg = bgOffsetRef.current;
 
-      // Облака — генерация до уровня 10, встреча к ~80
+      // Облака — каждые 3 уровня до уровня 15
       if (newLevel < CLOUD_MAX_LEVEL) {
-        const isDense = newLevel >= CLOUD_DENSE_START && newLevel <= CLOUD_DENSE_END;
-        const interval = isDense ? Math.floor(CLOUD_SPAWN_INTERVAL / 2) : CLOUD_SPAWN_INTERVAL;
-        setGeneratedClouds(clouds => {
-          const filtered = clouds.filter(c => c.worldY - bg > -windowHeight * 2);
-          if (newLevel % interval === 0) {
+        if (newLevel % CLOUD_SPAWN_INTERVAL === 0) {
+          setGeneratedClouds(clouds => {
+            const filtered = clouds.filter(c => c.worldY - bg > -windowHeight * 2);
             let newX = Math.random() * 70 + 5;
             let attempts = 0;
             while (Math.abs(newX - lastCloudX) < 25 && attempts < 10) {
@@ -100,9 +99,8 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
               animDur: `${20 + Math.floor(Math.random() * 15)}s`,
             };
             return [...filtered, newCloud];
-          }
-          return filtered;
-        });
+          });
+        }
       } else {
         setGeneratedClouds(clouds => clouds.filter(c => c.worldY - bg > -windowHeight * 2));
       }
@@ -124,9 +122,9 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
         });
       }
 
-      // Планета — каждые 30 уровней, 40% шанс
-      if (newLevel >= SPACE_OBJECTS_START && newLevel % 30 === 0 && Math.random() < 0.4) {
-        setSpaceObjects(objs => {
+      // Планеты — отдельный стейт, каждые 50 уровней, 40% шанс
+      if (newLevel >= SPACE_OBJECTS_START && newLevel % 50 === 0 && Math.random() < 0.4) {
+        setPlanets(objs => {
           const filtered = objs.filter(o => o.worldY - bg > -windowHeight * 3);
           let newX = Math.random() * 60 + 10;
           let attempts = 0;
@@ -135,31 +133,31 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
             attempts++;
           }
           setLastPlanetX(newX);
-          const planet: SpaceObject = {
+          return [...filtered, {
             id: Date.now(),
-            type: 'planet',
+            type: 'planet' as const,
             x: newX,
             worldY: bg + windowHeight * 1.2 + Math.random() * windowHeight * 0.5,
             zIndex: 1,
-          };
-          return [...filtered, planet];
+          }];
         });
       }
 
-      // Космические объекты — каждые 7 уровней, 30% шанс
+      // Космические объекты — отдельный стейт, каждые 5 уровней, 50% шанс
       const SPACE_OBJ_TYPES: Array<'ship' | 'meteor' | 'rocket' | 'satellite' | 'asteroid'> = ['ship', 'meteor', 'rocket', 'satellite', 'asteroid'];
-      if (newLevel >= SPACE_OBJECTS_START && newLevel % 7 === 0 && Math.random() < 0.3) {
+      if (newLevel >= SPACE_OBJECTS_START && newLevel % 5 === 0 && Math.random() < 0.5) {
         setSpaceObjects(objs => {
           const filtered = objs.filter(o => o.worldY - bg > -windowHeight * 3);
           const type = SPACE_OBJ_TYPES[Math.floor(Math.random() * SPACE_OBJ_TYPES.length)];
-          const obj: SpaceObject = {
+          const fromLeft = Math.random() > 0.5;
+          return [...filtered, {
             id: Date.now() + 1,
             type,
-            x: Math.random() * 80 + 5,
+            x: fromLeft ? -10 : 110,
             worldY: bg + windowHeight * 1.1 + Math.random() * windowHeight * 0.5,
             zIndex: 3,
-          };
-          return [...filtered, obj];
+            fromLeft,
+          } as SpaceObject];
         });
       }
 
@@ -197,7 +195,7 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
   return {
     level, isCooldown, cooldownProgress,
     isSquashing, plusOnes, quote, quoteDirection, leaves,
-    generatedClouds, generatedStars, spaceObjects,
+    generatedClouds, generatedStars, planets, spaceObjects,
     handleWater, handleBoost, trunkSegments,
     squashTransform, squashTransition,
   };
