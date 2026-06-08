@@ -117,13 +117,11 @@ export default function TreeScene({
       {/* Космические объекты */}
       {spaceObjects.map(obj => (
         <div key={obj.id} style={{
-          position: obj.type === 'ship' ? 'fixed' : 'absolute',
-          bottom: obj.type === 'ship' ? undefined : worldBottom + obj.worldY,
-          top: obj.type === 'ship' ? `${windowSize.height * 0.3}px` : undefined,
-          left: obj.type === 'ship' ? 0 : `${obj.x}%`,
-          transition: obj.type === 'ship' ? 'none' : 'bottom 0.8s ease',
-          zIndex: obj.zIndex,
-          pointerEvents: 'none',
+     position: 'absolute',
+bottom: worldBottom + obj.worldY,
+top: undefined,
+left: `${obj.x}%`,
+transition: 'bottom 0.8s ease',
         }}>
           {obj.type === 'planet' && (
             <img src="/tree/planet.png" alt="" draggable="false"
