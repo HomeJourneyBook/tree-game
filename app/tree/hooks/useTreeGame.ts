@@ -118,11 +118,11 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
     twinkleDelay: `-${(Math.random() * 3).toFixed(1)}s`,
     twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
   }));
-  setGeneratedStars(stars => {
-const filtered = stars.filter(s => s.worldY > bg - windowHeight * 0.5);
-    return [...filtered, ...newStars];
-  });
-}
+    setGeneratedStars(stars => {
+  const filtered = stars.filter(s => s.worldY > bg);
+  return [...filtered, ...newStars];
+});
+
 
       // Предупреждение на уровне 90
 if (newLevel === 90) {
