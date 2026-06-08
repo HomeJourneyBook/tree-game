@@ -138,63 +138,64 @@ export default function TreeScene({
         </div>
       ))}
 
-      {/* Космические объекты — летят горизонтально */}
-      {spaceObjects.map(obj => (
-        <div key={obj.id} style={{
-          position: 'absolute',
-          bottom: worldBottom + obj.worldY,
-          left: obj.fromLeft ? '-10%' : '110%',
-          transition: bt,
-          zIndex: obj.zIndex,
-          pointerEvents: 'none',
-          animation: `${obj.fromLeft ? 'flyLeftToRight' : 'flyRightToLeft'} 8s linear forwards`,
-        }}>
-          {obj.type === 'ship' && (
-            <img src="/tree/ship.gif" alt="" draggable="false"
-              style={{
-                imageRendering: 'pixelated',
-                transform: obj.fromLeft ? 'scaleX(1)' : 'scaleX(-1)',
-              }}
-            />
-          )}
-          {obj.type === 'meteor' && (
-            <div style={{ fontSize: isMobile ? '40px' : '52px', lineHeight: 1,
-              transform: obj.fromLeft ? 'rotate(-45deg)' : 'rotate(45deg)' }}>
-              ☄️
-            </div>
-          )}
-          {obj.type === 'rocket' && (
-            <div style={{ fontSize: isMobile ? '36px' : '48px', lineHeight: 1,
-              transform: obj.fromLeft ? 'rotate(90deg)' : 'rotate(-90deg)' }}>
-              🚀
-            </div>
-          )}
-          {obj.type === 'satellite' && (
-            <div style={{ fontSize: isMobile ? '34px' : '44px', lineHeight: 1 }}>
-              🛸
-            </div>
-          )}
-          {obj.type === 'asteroid' && (
-            <div style={{ fontSize: isMobile ? '38px' : '50px', lineHeight: 1,
-              transform: 'rotate(20deg)' }}>
-              🪨
-            </div>
-          {obj.type === 'warning' && (
-  <div style={{
-    fontSize: isMobile ? '13px' : '16px',
-    color: 'rgba(255, 220, 100, 0.9)',
-    fontFamily: 'monospace',
-    fontWeight: 'bold',
-    whiteSpace: 'nowrap',
-    textShadow: '0 0 8px rgba(255, 200, 0, 0.6)',
-    letterSpacing: '0.05em',
+    {/* Космические объекты — летят горизонтально */}
+{spaceObjects.map(obj => (
+  <div key={obj.id} style={{
+    position: 'absolute',
+    bottom: worldBottom + obj.worldY,
+    left: obj.fromLeft ? '-10%' : '110%',
+    transition: bt,
+    zIndex: obj.zIndex,
+    pointerEvents: 'none',
+    animation: `${obj.fromLeft ? 'flyLeftToRight' : 'flyRightToLeft'} 8s linear forwards`,
   }}>
-    ⚠️ Осторожно — вы выходите за пределы атмосферы
+    {obj.type === 'ship' && (
+      <img src="/tree/ship.gif" alt="" draggable="false"
+        style={{
+          imageRendering: 'pixelated',
+          transform: obj.fromLeft ? 'scaleX(1)' : 'scaleX(-1)',
+        }}
+      />
+    )}
+    {obj.type === 'meteor' && (
+      <div style={{ fontSize: isMobile ? '40px' : '52px', lineHeight: 1,
+        transform: obj.fromLeft ? 'rotate(-45deg)' : 'rotate(45deg)' }}>
+        ☄️
+      </div>
+    )}
+    {obj.type === 'rocket' && (
+      <div style={{ fontSize: isMobile ? '36px' : '48px', lineHeight: 1,
+        transform: obj.fromLeft ? 'rotate(90deg)' : 'rotate(-90deg)' }}>
+        🚀
+      </div>
+    )}
+    {obj.type === 'satellite' && (
+      <div style={{ fontSize: isMobile ? '34px' : '44px', lineHeight: 1 }}>
+        🛸
+      </div>
+    )}
+    {obj.type === 'asteroid' && (
+      <div style={{ fontSize: isMobile ? '38px' : '50px', lineHeight: 1,
+        transform: 'rotate(20deg)' }}>
+        🪨
+      </div>
+    )}
+    {obj.type === 'warning' && (
+      <div style={{
+        fontSize: isMobile ? '13px' : '16px',
+        color: 'rgba(255, 220, 100, 0.9)',
+        fontFamily: 'monospace',
+        fontWeight: 'bold',
+        whiteSpace: 'nowrap',
+        textShadow: '0 0 8px rgba(255, 200, 0, 0.6)',
+        letterSpacing: '0.05em',
+      }}>
+        ⚠️ Осторожно — вы выходите за пределы атмосферы
+      </div>
+    )}
   </div>
-)}
-          )}
-        </div>
-      ))}
+))}
+
 
       {/* Крона + стволы */}
       <div style={{
