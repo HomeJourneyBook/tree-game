@@ -5,12 +5,12 @@ export const MAX_TRUNKS = 10;
 export const CLOUD_SPAWN_INTERVAL = 10;
 export const CLOUD_DENSE_START = 10;
 export const CLOUD_DENSE_END = 35;
-export const CLOUD_MAX_LEVEL = 40;
+export const CLOUD_MAX_LEVEL = 10;
 
 export const CLOUD_TYPES = ['cloud1', 'cloud2', 'cloud3'];
 
-export const SPACE_THRESHOLD = 120;
-export const TRANSITION_DURATION = 10;
+export const SPACE_THRESHOLD = 90;
+export const TRANSITION_DURATION = 40;
 export const SPACE_OBJECTS_START = 140;
 
 export const QUOTES = [
@@ -71,7 +71,7 @@ export interface Star {
 
 export interface SpaceObject {
   id: number;
-  type: 'planet' | 'ship';
+  type: 'planet' | 'ship' | 'meteor' | 'rocket' | 'satellite' | 'asteroid';
   x: number;
   worldY: number;
   zIndex: number;
