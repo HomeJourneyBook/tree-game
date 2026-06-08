@@ -78,10 +78,3 @@ export interface SpaceObject {
   fromLeft?: boolean;
 }
 
-  id: number;
-  type: 'planet' | 'ship' | 'meteor' | 'rocket' | 'satellite' | 'asteroid';
-  x: number;
-  worldY: number;
-  zIndex: number;
-  
-}
