@@ -97,7 +97,7 @@ if (newLevel < CLOUD_MAX_LEVEL) {
         id: Date.now(),
         type: CLOUD_TYPES[Math.floor(Math.random() * CLOUD_TYPES.length)],
         x: newX,
-        worldY: bg + windowHeight * 2.5 + Math.random() * windowHeight,
+        worldY: bg + windowHeight * 1.8 + Math.random() * windowHeight,
         widthVw: 10 + Math.random() * 8,
         zIndex: Math.random() > 0.5 ? 3 : 1,
         animDelay: `-${Math.floor(Math.random() * 15)}s`,
@@ -156,7 +156,7 @@ if (newLevel >= SPACE_OBJECTS_START && newLevel % 25 === 0 && Math.random() < 0.
       id: Date.now() + 1,
       type: 'ship',
       x: 0,
-      worldY: bg + windowHeight * 1.8 + Math.random() * windowHeight,
+      worldY: bg + windowHeight * 1.2 + Math.random() * windowHeight,
       zIndex: 3,
     };
     return [...filtered, ship];
