@@ -130,7 +130,7 @@ if (newLevel === 90) {
     id: Date.now() + 99,
     type: 'warning' as const,
     x: 0,
-    worldY: bg + windowHeight * 0.4,
+worldY: bg - windowHeight * 0.2,
     zIndex: 4,
     fromLeft: true,
   }]);
