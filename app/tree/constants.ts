@@ -35,14 +35,10 @@ export const CLOUDS_BEHIND = [
   { src: 'cloud1', bottomVw: 0.49, left: '5%', widthVw: 13, anim: 'cloudFloat1', delay: '0s', dur: '22s' },
   { src: 'cloud2', bottomVw: 0.64, left: '55%', widthVw: 15, anim: 'cloudFloat2', delay: '-10s', dur: '28s' },
   { src: 'cloud1', bottomVw: 0.88, left: '30%', widthVw: 11, anim: 'cloudFloat1', delay: '-7s', dur: '25s' },
-  { src: 'cloud2', bottomVw: 1.18, left: '75%', widthVw: 12, anim: 'cloudFloat2', delay: '-18s', dur: '32s' },
-  { src: 'cloud3', bottomVw: 1.32, left: '15%', widthVw: 14, anim: 'cloudFloat3', delay: '-5s', dur: '30s' },
-  { src: 'cloud1', bottomVw: 1.47, left: '45%', widthVw: 10, anim: 'cloudFloat1', delay: '-14s', dur: '20s' },
 ];
 
 export const CLOUDS_FRONT = [
   { src: 'cloud3', bottomVw: 0.69, left: '20%', widthVw: 17, anim: 'cloudFloat3', delay: '-15s', dur: '35s' },
-  { src: 'cloud2', bottomVw: 1.77, left: '60%', widthVw: 14, anim: 'cloudFloat2', delay: '-8s', dur: '27s' },
 ];
 
 export interface Leaf {
