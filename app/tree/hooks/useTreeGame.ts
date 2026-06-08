@@ -119,7 +119,7 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
     twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
   }));
   setGeneratedStars(stars => {
-    const filtered = stars.filter(s => s.worldY - bg > -windowHeight * 0.5);
+const filtered = stars.filter(s => s.worldY > bg - windowHeight * 0.5);
     return [...filtered, ...newStars];
   });
 }
