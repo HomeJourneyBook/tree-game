@@ -9,9 +9,9 @@ export const CLOUD_MAX_LEVEL = 40;
 
 export const CLOUD_TYPES = ['cloud1', 'cloud2', 'cloud3'];
 
-export const SPACE_THRESHOLD = 50;
+export const SPACE_THRESHOLD = 120;
 export const TRANSITION_DURATION = 10;
-export const SPACE_OBJECTS_START = 70;
+export const SPACE_OBJECTS_START = 140;
 
 export const QUOTES = [
   "Thank you for watering! 🌱",
