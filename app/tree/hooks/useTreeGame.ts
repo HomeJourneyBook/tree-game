@@ -108,8 +108,8 @@ export function useTreeGame(windowHeight: number, trunkHeightPx: number) {
 
       // Звёзды — после уровня 100, каждый полив 2-4 штуки
 // Каждая на своей случайной горизонтали выше экрана
-if (newLevel >= SPACE_THRESHOLD) {
-  const count = 2 + Math.floor(Math.random() * 3);
+      if (newLevel >= SPACE_THRESHOLD) {
+  const count = 1 + Math.floor(Math.random() * 3);
   const newStars: Star[] = Array.from({ length: count }, (_, i) => ({
     id: Date.now() + i,
     x: Math.random() * 90 + 5,
@@ -119,7 +119,7 @@ if (newLevel >= SPACE_THRESHOLD) {
     twinkleDur: `${(1.5 + Math.random() * 2).toFixed(1)}s`,
   }));
   setGeneratedStars(stars => {
-    const filtered = stars.filter(s => s.worldY - bg > -windowHeight);
+    const filtered = stars.filter(s => s.worldY - bg > -windowHeight * 0.5);
     return [...filtered, ...newStars];
   });
 }
