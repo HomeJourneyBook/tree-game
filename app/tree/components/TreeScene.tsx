@@ -22,12 +22,13 @@ type Props = {
   isTablet: boolean;
   isMobile: boolean;
   level: number;
+  planets: SpaceObject[];
 };
 
 export default function TreeScene({
   worldBottom, windowSize, objScale, bgSrc,
   treeWidthVw, crownTopPx, baseOffset,
-  dragonBottomVw, trunkSegments,
+  dragonBottomVw, trunkSegments, planets,
   squashTransform, squashTransition,
   quote, quoteDirection, leaves, generatedClouds, generatedStars,
   spaceObjects, isMobile, isTablet, level,
@@ -114,55 +115,70 @@ export default function TreeScene({
         }} />
       ))}
 
-      {/* Космические объекты */}
-      {spaceObjects.map(obj => (
-        <div key={obj.id} style={{
-          position: 'absolute',
-          bottom: worldBottom + obj.worldY,
-          left: `${obj.x}%`,
-          transition: 'bottom 0.8s ease',
-          zIndex: obj.zIndex,
-          pointerEvents: 'none',
-        }}>
-          {obj.type === 'planet' && (
-            <img src="/tree/planet.png" alt="" draggable="false"
-              style={{
-                width: isMobile ? '35vw' : '18vw',
-                imageRendering: 'pixelated',
-                display: 'block',
-              }}
-            />
-          )}
-          {obj.type === 'ship' && (
-            <img src="/tree/ship.gif" alt="" draggable="false"
-              style={{
-                imageRendering: 'pixelated',
-                animation: 'shipFly 8s linear forwards',
-              }}
-            />
-          )}
-          {obj.type === 'meteor' && (
-            <div style={{ fontSize: isMobile ? '40px' : '52px', lineHeight: 1, transform: 'rotate(-45deg)' }}>
-              ☄️
-            </div>
-          )}
-          {obj.type === 'rocket' && (
-            <div style={{ fontSize: isMobile ? '36px' : '48px', lineHeight: 1, transform: 'rotate(45deg)' }}>
-              🚀
-            </div>
-          )}
-          {obj.type === 'satellite' && (
-            <div style={{ fontSize: isMobile ? '34px' : '44px', lineHeight: 1, animation: 'bob 4s ease-in-out infinite' }}>
-              🛸
-            </div>
-          )}
-          {obj.type === 'asteroid' && (
-            <div style={{ fontSize: isMobile ? '38px' : '50px', lineHeight: 1, transform: 'rotate(20deg)' }}>
-              🪨
-            </div>
-          )}
-        </div>
-      ))}
+{/* Планеты — уходят вниз с фоном */}
+{planets.map(obj => (
+  <div key={obj.id} style={{
+    position: 'absolute',
+    bottom: worldBottom + obj.worldY,
+    left: `${obj.x}%`,
+    transition: 'bottom 0.8s ease',
+    zIndex: obj.zIndex,
+    pointerEvents: 'none',
+  }}>
+    <img src="/tree/planet.png" alt="" draggable="false"
+      style={{
+        width: isMobile ? '35vw' : '18vw',
+        imageRendering: 'pixelated',
+        display: 'block',
+      }}
+    />
+  </div>
+))}
+
+{/* Космические объекты — летят горизонтально и уходят вниз */}
+{spaceObjects.map(obj => (
+  <div key={obj.id} style={{
+    position: 'absolute',
+    bottom: worldBottom + obj.worldY,
+    left: obj.fromLeft ? '-10%' : '110%',
+    transition: 'bottom 0.8s ease',
+    zIndex: obj.zIndex,
+    pointerEvents: 'none',
+    animation: `${obj.fromLeft ? 'flyLeftToRight' : 'flyRightToLeft'} 8s linear forwards`,
+  }}>
+    {obj.type === 'ship' && (
+      <img src="/tree/ship.gif" alt="" draggable="false"
+        style={{
+          imageRendering: 'pixelated',
+          transform: obj.fromLeft ? 'scaleX(1)' : 'scaleX(-1)',
+        }}
+      />
+    )}
+    {obj.type === 'meteor' && (
+      <div style={{ fontSize: isMobile ? '40px' : '52px', lineHeight: 1,
+        transform: obj.fromLeft ? 'rotate(-45deg)' : 'rotate(45deg)' }}>
+        ☄️
+      </div>
+    )}
+    {obj.type === 'rocket' && (
+      <div style={{ fontSize: isMobile ? '36px' : '48px', lineHeight: 1,
+        transform: obj.fromLeft ? 'rotate(90deg)' : 'rotate(-90deg)' }}>
+        🚀
+      </div>
+    )}
+    {obj.type === 'satellite' && (
+      <div style={{ fontSize: isMobile ? '34px' : '44px', lineHeight: 1 }}>
+        🛸
+      </div>
+    )}
+    {obj.type === 'asteroid' && (
+      <div style={{ fontSize: isMobile ? '38px' : '50px', lineHeight: 1,
+        transform: 'rotate(20deg)' }}>
+        🪨
+      </div>
+    )}
+  </div>
+))}
 
       {/* Крона + стволы */}
       <div style={{
