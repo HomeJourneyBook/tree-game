@@ -178,24 +178,25 @@ export default function TreePage() {
         opacity: isReady ? 1 : 0,
       }}>
 
+        
         {/* Звёзды — параллакс, только в космосе */}
         {level >= SPACE_THRESHOLD && stars.map(star => (
-          <div key={star.id} style={{
-            position: 'fixed',
-            left: `${star.x}%`,
-            top: `${star.y}%`,
-            transform: `translateY(${starOffset}px)`,
-            width: star.size === 2 ? '3px' : '2px',
-            height: star.size === 2 ? '3px' : '2px',
-            backgroundColor: 'white',
-            borderRadius: '50%',
-            zIndex: 0,
-            pointerEvents: 'none',
-            animation: star.size === 2
-              ? `twinkle ${star.twinkleDur} ease-in-out infinite ${star.twinkleDelay}`
-              : 'none',
-          }} />
-        ))}
+  <div key={star.id} style={{
+    position: 'fixed',
+    left: `${star.x}%`,
+    top: `${star.y - 100}%`,
+    transform: `translateY(${starOffset}px)`,
+    width: star.size === 2 ? '3px' : '2px',
+    height: star.size === 2 ? '3px' : '2px',
+    backgroundColor: 'white',
+    borderRadius: '50%',
+    zIndex: 0,
+    pointerEvents: 'none',
+    animation: star.size === 2
+      ? `twinkle ${star.twinkleDur} ease-in-out infinite ${star.twinkleDelay}`
+      : 'none',
+  }} />
+))}
 
         <TreeScene
           worldBottom={worldBottom}
